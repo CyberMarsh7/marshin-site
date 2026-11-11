@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MarshinTechnologies — Local AI secretary for the computer you already own</title>
+<meta name="description" content="MarshinTechnologies sets up a private, local AI secretary on your own machine — answers calls, takes messages, handles email and texts. No monthly fees. We come to you.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout: single-column editorial landing — warm ink on paper, one copper accent, generous air. */
+  :root {
+    color-scheme: light;
+    --paper: #f6f1e7;
+    --paper-2: #efe7d7;
+    --ink: #1c1917;
+    --ink-soft: #4b443d;
+    --ink-faint: #7a7064;
+    --line: #ddd2bf;
+    --accent: #b5542a;      /* copper */
+    --accent-soft: #e7a877;
+    --card: #fffdf8;
+    --good: #2f6f4f;
+    --shadow: 0 1px 2px rgba(28,25,23,.06), 0 8px 24px rgba(28,25,23,.07);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #16130f;
+      --paper-2: #1d1914;
+      --ink: #f3ece0;
+      --ink-soft: #c7bcab;
+      --ink-faint: #8f8475;
+      --line: #342c22;
+      --accent: #e08a4f;
+      --accent-soft: #7a4324;
+      --card: #201b15;
+      --good: #6fcaa0;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #16130f;
+    --paper-2: #1d1914;
+    --ink: #f3ece0;
+    --ink-soft: #c7bcab;
+    --ink-faint: #8f8475;
+    --line: #342c22;
+    --accent: #e08a4f;
+    --accent-soft: #7a4324;
+    --card: #201b15;
+    --good: #6fcaa0;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 {
+    font-family: Fraunces, Georgia, "Times New Roman", serif;
+    text-wrap: balance;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    font-weight: 600;
+  }
+  p { max-width: 60ch; }
+  a { color: inherit; }
+
+  .wrap {
+    width: 100%;
+    max-width: 1060px;
+    margin-inline: auto;
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+  }
+
+  /* top bar */
+  header.bar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar .wrap { display: flex; align-items: center; justify-content: space-between; padding-block: 14px; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: Fraunces, Georgia, serif; font-weight: 600; font-size: 1.05rem; letter-spacing: -.01em; }
+  .mark { width: 26px; height: 26px; border-radius: 7px; background: var(--accent); position: relative; flex: none; box-shadow: var(--shadow); }
+  .mark::after { content: ""; position: absolute; inset: 7px; border: 2px solid var(--paper); border-radius: 50%; border-right-color: transparent; }
+  .bar .cta { font-size: .9rem; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: #fff;
+    border: none; border-radius: 999px;
+    padding: 12px 22px; font-size: 1rem; font-weight: 600;
+    cursor: pointer; text-decoration: none; box-shadow: var(--shadow);
+    transition: transform .12s ease, filter .12s ease;
+  }
+  .btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); box-shadow: none; }
+
+  /* hero */
+  .hero .wrap { padding-block: clamp(48px, 9vw, 104px); }
+  .eyebrow { font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+  .hero h1 { font-size: clamp(2.4rem, 6.5vw, 4.3rem); margin: 18px 0 0; }
+  .hero .lede { font-size: clamp(1.1rem, 2.4vw, 1.35rem); color: var(--ink-soft); margin-top: 22px; }
+  .hero .sub { margin-top: 10px; color: var(--ink-faint); font-weight: 500; }
+  .hero .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; align-items: center; }
+  .reassure { display: flex; flex-wrap: wrap; gap: 18px; margin-top: 30px; font-size: .92rem; color: var(--ink-soft); }
+  .reassure span { display: inline-flex; align-items: center; gap: 8px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); flex: none; }
+
+  section { padding-block: clamp(44px, 7vw, 80px); }
+  .section-head { max-width: 62ch; }
+  .section-head h2 { font-size: clamp(1.7rem, 4vw, 2.5rem); }
+  .section-head p { color: var(--ink-soft); margin-top: 12px; }
+  .alt { background: var(--paper-2); border-block: 1px solid var(--line); }
+
+  /* what it does */
+  .does-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-top: 36px; padding: 0; }
+  .does-grid li { list-style: none; }
+  .tile { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 22px; height: 100%; box-shadow: var(--shadow); min-width: 0; }
+  .tile h3 { font-size: 1.15rem; margin: 2px 0 6px; }
+  .tile p { color: var(--ink-soft); font-size: .95rem; margin: 0; }
+  .ic { width: 34px; height: 34px; border-radius: 9px; background: color-mix(in srgb, var(--accent) 16%, var(--card)); color: var(--accent); display: grid; place-items: center; font-weight: 700; font-family: Fraunces, serif; }
+
+  /* steps */
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 20px; margin-top: 40px; }
+  .step { position: relative; padding-top: 14px; min-width: 0; }
+  .step .n { font-family: Fraunces, serif; font-size: 2.2rem; color: var(--accent); line-height: 1; }
+  .step h3 { font-size: 1.15rem; margin: 10px 0 6px; }
+  .step p { color: var(--ink-soft); font-size: .95rem; margin: 0; }
+
+  /* pricing */
+  .price-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; margin-top: 38px; }
+  .plan { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 26px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow); min-width: 0; }
+  .plan.feature { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent), var(--shadow); }
+  .plan .name { font-weight: 600; font-family: Fraunces, serif; font-size: 1.2rem; }
+  .plan .amt { font-size: 2rem; font-weight: 700; letter-spacing: -.02em; }
+  .plan .amt small { font-size: .9rem; color: var(--ink-faint); font-weight: 500; }
+  .plan p { font-size: .93rem; color: var(--ink-soft); margin: 0; }
+  .tag { align-self: flex-start; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; font-weight: 700; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); padding: 4px 10px; border-radius: 999px; }
+  .fineprint { margin-top: 22px; font-size: .86rem; color: var(--ink-faint); max-width: 70ch; }
+
+  /* beyond standard / Pi upsell */
+  .beyond-card { background: var(--card); border: 1px solid var(--accent); border-radius: 18px; padding: clamp(24px, 4vw, 36px); margin-top: 34px; box-shadow: 0 0 0 1px var(--accent), var(--shadow); }
+  .beyond-card h3 { font-size: clamp(1.35rem, 3.2vw, 2rem); margin: 14px 0 12px; }
+  .beyond-card p { color: var(--ink-soft); }
+  .beyond-card .choice { color: var(--ink); font-weight: 500; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+
+  /* why different */
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 34px; }
+  .why { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; box-shadow: var(--shadow); min-width: 0; }
+  .why h3 { font-size: 1.05rem; margin: 0 0 6px; display: flex; align-items: center; gap: 9px; }
+  .why p { font-size: .93rem; color: var(--ink-soft); margin: 0; }
+  .check { color: var(--good); font-weight: 800; }
+
+  /* proof */
+  .proof-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 32px; }
+  .proofcard { border: 1px solid var(--line); border-radius: 16px; padding: 26px 22px; background: var(--card); box-shadow: var(--shadow); min-width: 0; }
+  .proofcard .play { width: 46px; height: 46px; border-radius: 50%; background: color-mix(in srgb, var(--accent) 16%, var(--card)); color: var(--accent); display: grid; place-items: center; font-size: 1.1rem; margin-bottom: 12px; }
+  .proofcard h3 { font-size: 1.05rem; margin: 0 0 4px; }
+  .proofcard p { font-size: .9rem; color: var(--ink-faint); margin: 0; }
+
+  /* cta band */
+  .cta-band { background: var(--ink); color: var(--paper); }
+  :root[data-theme="dark"] .cta-band, :root:not([data-theme="light"]) .cta-band { background: #0d0b08; }
+  .cta-band .wrap { padding-block: clamp(48px, 8vw, 88px); text-align: center; }
+  .cta-band h2 { color: var(--paper); font-size: clamp(1.9rem, 4.5vw, 2.8rem); }
+  .cta-band p { color: color-mix(in srgb, var(--paper) 78%, transparent); margin: 14px auto 0; }
+
+  /* booking */
+  .book { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 26px; max-width: 520px; margin: 34px auto 0; box-shadow: var(--shadow); text-align: left; }
+  .book label { display: block; font-size: .85rem; font-weight: 600; margin: 14px 0 6px; color: var(--ink); }
+  .book input, .book textarea { width: 100%; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 11px 13px; font: inherit; color: var(--ink); }
+  .book .btn { width: 100%; justify-content: center; margin-top: 20px; }
+  .book .done { color: var(--good); font-weight: 600; margin-top: 16px; }
+
+  footer { border-top: 1px solid var(--line); background: var(--paper-2); }
+  footer .wrap { padding-block: 40px; display: flex; flex-wrap: wrap; gap: 18px 40px; justify-content: space-between; align-items: center; }
+  footer .tagline { color: var(--ink-soft); font-size: .92rem; max-width: 44ch; }
+  footer .legal { color: var(--ink-faint); font-size: .82rem; }
+
+  @media (max-width: 560px) {
+    .bar .brand span.full { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brand"><span class="mark" aria-hidden="true"></span><span class="full">MarshinTechnologies</span></div>
+    <a href="#book" class="btn ghost cta">Free checkup</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">We breathe life into your machines</div>
+      <h1>Breathe new life into the computer you already own.</h1>
+      <p class="lede">We turn that old tower or laptop into a personal secretary — one that answers your calls, takes your messages, and handles your email and texts. And it isn't only for old machines: even a newer one can be given impressive new jobs.</p>
+      <p class="sub">It lives on your machine. No monthly fees, and nothing leaves your house.</p>
+      <div class="actions">
+        <a href="#book" class="btn">Book a home-visit checkup</a>
+        <a href="#how" class="btn ghost">See how it works</a>
+      </div>
+      <div class="reassure">
+        <span><i class="dot"></i> Runs locally</span>
+        <span><i class="dot"></i> No subscription</span>
+        <span><i class="dot"></i> Your data stays home</span>
+        <span><i class="dot"></i> An off-switch you control</span>
+        <span><i class="dot"></i> We come to you</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="what">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>What it does for you</h2>
+        <p>Plain and useful from day one — a secretary that works while you don't have to.</p>
+      </div>
+      <ul class="does-grid">
+        <li class="tile"><div class="ic">C</div><h3>Answers calls</h3><p>Picks up, listens, and takes a message so you never miss who needed you.</p></li>
+        <li class="tile"><div class="ic">M</div><h3>Takes messages</h3><p>Writes down what matters and hands it to you in plain words.</p></li>
+        <li class="tile"><div class="ic">E</div><h3>Handles email &amp; texts</h3><p>Reads, sorts, and drafts replies — bad or risky messages get set aside, not acted on.</p></li>
+        <li class="tile"><div class="ic">R</div><h3>Reminders &amp; calendar</h3><p>Keeps your dates and nudges you before they slip by.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>How it works</h2>
+        <p>No shipping, nothing to manufacture. We set it up on the machine you already have.</p>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><h3>Home-visit checkup</h3><p>We come to you — you just cover the round-trip gas. The checkup itself is free: we read your machine and tell you honestly what it can do. No pressure.</p></div>
+        <div class="step"><div class="n">2</div><h3>Set up on the spot</h3><p>We set it up right there on your computer when we can — private, and yours.</p></div>
+        <div class="step"><div class="n">3</div><h3>It works for you</h3><p>Calls, messages, email, reminders — handled, with an off-switch you control.</p></div>
+        <div class="step"><div class="n">4</div><h3>Grow when ready</h3><p>Want more muscle? A purpose-built add-on gives an older machine real new ability.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="pricing">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Straightforward pricing</h2>
+        <p>You pay for the result and the time. One-time — never a monthly bill.</p>
+      </div>
+      <div class="price-grid">
+        <div class="plan">
+          <div class="name">Home-visit checkup</div>
+          <div class="amt">Free <small>+ round-trip gas</small></div>
+          <p>We come to you. The checkup itself is free — you just cover the gas for the round trip. We read your hardware and tell you straight what it can and can't do.</p>
+        </div>
+        <div class="plan feature">
+          <span class="tag">Most popular</span>
+          <div class="name">Basic install</div>
+          <div class="amt">$125</div>
+          <p>Your local secretary set up on your existing machine — calls, messages, email, texts, calendar and reminders.</p>
+        </div>
+        <div class="plan">
+          <div class="name">Voice + automation</div>
+          <div class="amt">By system</div>
+          <p>Everything in Basic, plus voice interaction and task automation where your hardware supports it. Priced per build.</p>
+        </div>
+        <div class="plan">
+          <div class="name">Pi add-on</div>
+          <div class="amt">Parts <small>+ build fee</small></div>
+          <p>A purpose-built Raspberry Pi bolted on to give an underpowered machine real function. You own the part.</p>
+        </div>
+      </div>
+      <p class="fineprint"><strong>Service area:</strong> close by, we come to you for just the round-trip gas; farther out, we'll arrange the trip and travel is on you. Either way, we'll usually suggest adding a Pi — or a few — to build real power into your machine. You front any hardware cost directly — we never float money on your parts. <strong>Optional power watchdog:</strong> a small unit that watches the power line and triggers a clean save-and-shutdown during an outage, so a blip can't corrupt your setup. It's a watchdog, not a battery — if you need the machine to keep running through an outage, that's a separate UPS.</p>
+    </div>
+  </section>
+
+  <section id="beyond">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Want more than standard?</h2>
+        <p>Most folks just want their system checked, working, and given new life — and that's most of what we do. But some want their machine to do something special. That's where the work gets fun.</p>
+      </div>
+      <div class="beyond-card">
+        <span class="tag">We highly recommend it</span>
+        <h3>Add a personal Pi, and we can build almost anything.</h3>
+        <p>A purpose-built Raspberry Pi bolts onto your setup and gives it real new ability — jobs your machine simply couldn't do on its own. It's made for exactly what you want, and it's the part a big-box repair counter can't offer you.</p>
+        <p class="choice">Honestly, we suggest adding a personal Pi to just about any system — it's the simplest way to give a machine real beef, whether it's tired or already decent. We'll lay out what it would do and what it costs, and you decide. Recommended across the board, but always your call. No pressure, ever.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="alt" id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Why it's different</h2>
+        <p>Most "assistants" rent you a little piece of someone else's cloud. This one is yours.</p>
+      </div>
+      <div class="why-grid">
+        <div class="why"><h3><span class="check">✓</span> Runs locally</h3><p>It lives on your machine — not a data center you rent by the month.</p></div>
+        <div class="why"><h3><span class="check">✓</span> Fully private</h3><p>Your data stays in your house. Optionally kept in places you own — never an outside cloud.</p></div>
+        <div class="why"><h3><span class="check">✓</span> One time, no subscription</h3><p>Pay once for the setup. No recurring fee quietly draining your account.</p></div>
+        <div class="why"><h3><span class="check">✓</span> You hold the switch</h3><p>One assistant, owned, that stays put. It doesn't spread and it turns off when you say.</p></div>
+        <div class="why"><h3><span class="check">✓</span> Built by hand</h3><p>Made by a self-taught developer who does right by people — including disabled users, by a disabled builder.</p></div>
+        <div class="why"><h3><span class="check">✓</span> Honest about limits</h3><p>At the home-visit checkup we tell you what your machine genuinely can and can't do. No overselling.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="proof">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>A day with your secretary</h2>
+        <p>Here's what it actually looks like once it's living on your machine.</p>
+      </div>
+      <div class="proof-grid">
+        <div class="proofcard"><div class="play">&#9742;</div><h3>A call comes in while you're busy</h3><p>It answers, listens, and takes the message — then hands you the gist, so you never miss who needed you.</p></div>
+        <div class="proofcard"><div class="play">&#9993;</div><h3>Your inbox is overflowing</h3><p>It sorts the pile, flags the one email that actually matters, and drafts your replies. A sketchy message gets set aside, never opened.</p></div>
+        <div class="proofcard"><div class="play">&#9719;</div><h3>Tomorrow sneaks up on you</h3><p>It remembers the appointment you'd have forgotten and nudges you in time — quietly, right on your machine.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band" id="book">
+    <div class="wrap">
+      <h2>Start with a home-visit checkup</h2>
+      <p>Tell us about the machine collecting dust. We'll tell you honestly what it can become.</p>
+      <form class="book" id="bookform" novalidate>
+        <label for="bk-name">Your name</label>
+        <input id="bk-name" name="name" type="text" autocomplete="name" placeholder="First name is fine">
+        <label for="bk-contact">Best way to reach you</label>
+        <input id="bk-contact" name="contact" type="text" autocomplete="email" placeholder="Phone or email">
+        <label for="bk-machine">What machine do you have?</label>
+        <textarea id="bk-machine" name="machine" rows="3" placeholder="Old tower, laptop, or 'no idea' — that's fine too"></textarea>
+        <button class="btn" type="submit">Request my home visit</button>
+        <div class="done" id="bk-done" hidden>Thanks — your request is noted. We'll be in touch to set up your home visit.</div>
+      </form>
+      <p style="text-align:center;margin-top:16px;font-size:.92rem">Prefer email? Reach us directly at <a href="mailto:hello@marshintech.com" style="color:var(--accent);font-weight:600">hello@marshintech.com</a></p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><span class="mark" aria-hidden="true"></span> MarshinTechnologies</div>
+    <p class="tagline">Tools built by a disabled, self-taught developer — for everyone, including disabled users.</p>
+    <div class="legal">&copy; <span id="yr"></span> MarshinTechnologies &middot; Local. Private. Yours.</div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var y = document.getElementById('yr');
+    if (y) y.textContent = new Date().getFullYear();
+
+    var form = document.getElementById('bookform');
+    if (form) {
+      // To get bookings emailed to you, paste your free Formspree URL here
+      // (2-min signup at formspree.io -> https://formspree.io/f/xxxxxx).
+      // Left blank, the form opens the visitor's email to hello@marshintech.com.
+      var FORM_ENDPOINT = "";
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var done = document.getElementById('bk-done');
+        var btn = form.querySelector('button[type=submit]');
+        var name = (document.getElementById('bk-name') || {}).value || '';
+        var contact = (document.getElementById('bk-contact') || {}).value || '';
+        var machine = (document.getElementById('bk-machine') || {}).value || '';
+        function sent() {
+          if (done) done.hidden = false;
+          if (btn) { btn.textContent = 'Request sent'; btn.disabled = true; btn.style.filter = 'grayscale(.3)'; }
+        }
+        function mailtoFallback() {
+          var subj = encodeURIComponent('Home-visit checkup request');
+          var body = encodeURIComponent('Name: ' + name + '\nReach me: ' + contact + '\nMachine: ' + machine);
+          window.location.href = 'mailto:hello@marshintech.com?subject=' + subj + '&body=' + body;
+        }
+        if (FORM_ENDPOINT) {
+          fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(form) })
+            .then(function () { sent(); })
+            .catch(function () { mailtoFallback(); sent(); });
+        } else {
+          mailtoFallback();
+          sent();
+        }
+      });
+    }
+  })();
+</script>
+</body>
+</html>
