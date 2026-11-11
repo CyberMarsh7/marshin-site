@@ -351,7 +351,7 @@
         <button class="btn" type="submit">Request my home visit</button>
         <div class="done" id="bk-done" hidden>Thanks — your request is noted. We'll be in touch to set up your home visit.</div>
       </form>
-      <p style="text-align:center;margin-top:16px;font-size:.92rem">Prefer email? Reach us directly at <a href="mailto:hello@marshintech.com" style="color:var(--accent);font-weight:600">hello@marshintech.com</a></p>
+      <p style="text-align:center;margin-top:16px;font-size:.92rem">Prefer email? Reach us directly at <a href="mailto:Bret@marshintech.com" style="color:var(--accent);font-weight:600">Bret@marshintech.com</a></p>
     </div>
   </section>
 </main>
@@ -389,7 +389,7 @@
         function mailtoFallback() {
           var subj = encodeURIComponent('Home-visit checkup request');
           var body = encodeURIComponent('Name: ' + name + '\nReach me: ' + contact + '\nMachine: ' + machine);
-          window.location.href = 'mailto:hello@marshintech.com?subject=' + subj + '&body=' + body;
+          window.location.href = 'mailto:Bret@marshintech.com?subject=' + subj + '&body=' + body;
         }
         if (FORM_ENDPOINT) {
           fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(form) })
