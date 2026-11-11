@@ -174,12 +174,33 @@
   .proofcard h3 { font-size: 1.05rem; margin: 0 0 4px; }
   .proofcard p { font-size: .9rem; color: var(--ink-faint); margin: 0; }
 
-  /* cta band */
-  .cta-band { background: var(--ink); color: var(--paper); }
-  :root[data-theme="dark"] .cta-band, :root:not([data-theme="light"]) .cta-band { background: #0d0b08; }
-  .cta-band .wrap { padding-block: clamp(48px, 8vw, 88px); text-align: center; }
-  .cta-band h2 { color: var(--paper); font-size: clamp(1.9rem, 4.5vw, 2.8rem); }
-  .cta-band p { color: color-mix(in srgb, var(--paper) 78%, transparent); margin: 14px auto 0; }
+  /* cta band — blue-hour scene: cobalt-to-magenta dusk, warm-lit windows, straight verticals */
+  .cta-band { position: relative; overflow: hidden; color: #fdf6ec;
+    background: linear-gradient(180deg, #050d28 0%, #0b1f4c 30%, #243a6e 52%, #6e3a62 76%, #c0673a 100%); }
+  :root[data-theme="dark"] .cta-band, :root:not([data-theme="light"]) .cta-band {
+    background: linear-gradient(180deg, #03081c 0%, #081842 30%, #1b2d58 52%, #582d4e 76%, #a4502e 100%); }
+  .cta-band::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(ellipse 72% 55% at 50% 33%, rgba(4,8,25,.55), transparent 62%); }
+  .cta-band::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background-repeat: no-repeat;
+    background-image:
+      radial-gradient(1.4px 1.4px at 12% 18%, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 23% 33%, rgba(255,255,255,.8), transparent),
+      radial-gradient(1.6px 1.6px at 38% 12%, #fff, transparent),
+      radial-gradient(1.1px 1.1px at 52% 26%, rgba(255,255,255,.7), transparent),
+      radial-gradient(1.5px 1.5px at 67% 15%, #fff, transparent),
+      radial-gradient(1.2px 1.2px at 78% 30%, rgba(255,255,255,.85), transparent),
+      radial-gradient(1.3px 1.3px at 88% 20%, #fff, transparent),
+      radial-gradient(1.1px 1.1px at 45% 9%, rgba(255,255,255,.6), transparent),
+      radial-gradient(1.2px 1.2px at 7% 38%, rgba(255,255,255,.7), transparent),
+      radial-gradient(1.4px 1.4px at 94% 40%, rgba(255,255,255,.7), transparent); }
+  .cta-band .wrap { position: relative; z-index: 2; padding-block: clamp(64px, 10vw, 120px); text-align: center; }
+  .cta-band h2 { color: #fff; font-size: clamp(1.9rem, 4.5vw, 2.8rem); }
+  .cta-band p { color: rgba(253,246,236,.84); margin: 14px auto 0; }
+  .skyline { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: clamp(90px, 13vw, 170px); z-index: 1; display: block; pointer-events: none; }
+  .skyline .bldg { fill: #0a1124; }
+  :root[data-theme="dark"] .skyline .bldg, :root:not([data-theme="light"]) .skyline .bldg { fill: #05091a; }
+  .skyline .win { fill: #ffcf7a; }
 
   /* booking */
   .book { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 26px; max-width: 520px; margin: 34px auto 0; box-shadow: var(--shadow); text-align: left; }
@@ -193,6 +214,27 @@
   footer .tagline { color: var(--ink-soft); font-size: .92rem; max-width: 44ch; }
   footer .legal { color: var(--ink-faint); font-size: .82rem; }
 
+  /* build selector */
+  .selector { background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: clamp(22px, 4vw, 36px); margin-top: 36px; box-shadow: var(--shadow); }
+  .q { margin-bottom: 22px; }
+  .q:last-of-type { margin-bottom: 0; }
+  .q .label { font-weight: 600; font-family: Fraunces, serif; font-size: 1.1rem; margin-bottom: 12px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+  .chip { border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 999px; padding: 10px 18px; font: inherit; font-size: .95rem; cursor: pointer; transition: all .12s ease; }
+  .chip:hover { border-color: var(--accent-soft); transform: translateY(-1px); }
+  .chip[aria-pressed="true"] { background: var(--accent); color: #fff; border-color: var(--accent); box-shadow: var(--shadow); }
+  .result { margin-top: 28px; padding-top: 26px; border-top: 1px solid var(--line); }
+  .result[hidden] { display: none; }
+  .result .tier { font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+  .result h3 { font-size: clamp(1.4rem, 3.4vw, 2rem); margin: 10px 0 10px; }
+  .result > p { color: var(--ink-soft); }
+  .result ul.can { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; }
+  .result ul.can li { display: flex; gap: 10px; align-items: flex-start; color: var(--ink); font-size: .96rem; }
+  .result ul.can li::before { content: "▸"; color: var(--accent); font-weight: 700; flex: none; }
+  .result .addon { margin-top: 20px; padding: 16px 18px; border-radius: 14px; background: color-mix(in srgb, var(--accent) 10%, var(--card)); border: 1px solid var(--accent-soft); color: var(--ink); font-size: .95rem; }
+  .result .addon strong { color: var(--accent); }
+  .result .actions { margin-top: 24px; }
+
   @media (max-width: 560px) {
     .bar .brand span.full { display: none; }
   }
@@ -203,7 +245,7 @@
 <header class="bar">
   <div class="wrap">
     <div class="brand"><span class="mark" aria-hidden="true"></span><span class="full">MarshinTechnologies</span></div>
-    <a href="#book" class="btn ghost cta">Free checkup</a>
+    <a href="#book" class="btn ghost cta">Book a checkup</a>
   </div>
 </header>
 
@@ -235,7 +277,7 @@
         <p>Plain and useful from day one — a secretary that works while you don't have to.</p>
       </div>
       <ul class="does-grid">
-        <li class="tile"><div class="ic">C</div><h3>Answers calls</h3><p>Picks up, listens, and takes a message so you never miss who needed you.</p></li>
+        <li class="tile"><div class="ic"><span class="mark" aria-hidden="true"></span></div><h3>Answers calls</h3><p>Picks up, listens, and takes a message so you never miss who needed you.</p></li>
         <li class="tile"><div class="ic">M</div><h3>Takes messages</h3><p>Writes down what matters and hands it to you in plain words.</p></li>
         <li class="tile"><div class="ic">E</div><h3>Handles email &amp; texts</h3><p>Reads, sorts, and drafts replies — bad or risky messages get set aside, not acted on.</p></li>
         <li class="tile"><div class="ic">R</div><h3>Reminders &amp; calendar</h3><p>Keeps your dates and nudges you before they slip by.</p></li>
@@ -250,7 +292,7 @@
         <p>No shipping, nothing to manufacture. We set it up on the machine you already have.</p>
       </div>
       <div class="steps">
-        <div class="step"><div class="n">1</div><h3>Home-visit checkup</h3><p>We come to you — you just cover the round-trip gas. The checkup itself is free: we read your machine and tell you honestly what it can do. No pressure.</p></div>
+        <div class="step"><div class="n">1</div><h3>Home-visit checkup</h3><p>We come to you for a flat trip fee that covers the travel and our time. We read your machine and tell you honestly what it can do — and if you move ahead, that fee comes off the build. No pressure.</p></div>
         <div class="step"><div class="n">2</div><h3>Set up on the spot</h3><p>We set it up right there on your computer when we can — private, and yours.</p></div>
         <div class="step"><div class="n">3</div><h3>It works for you</h3><p>Calls, messages, email, reminders — handled, with an off-switch you control.</p></div>
         <div class="step"><div class="n">4</div><h3>Grow when ready</h3><p>Want more muscle? A purpose-built add-on gives an older machine real new ability.</p></div>
@@ -267,8 +309,8 @@
       <div class="price-grid">
         <div class="plan">
           <div class="name">Home-visit checkup</div>
-          <div class="amt">Free <small>+ round-trip gas</small></div>
-          <p>We come to you. The checkup itself is free — you just cover the gas for the round trip. We read your hardware and tell you straight what it can and can't do.</p>
+          <div class="amt">Trip fee</div>
+          <p>We come to you for a flat trip fee that covers travel and our time. We read your hardware and tell you straight what it can and can't do — and the fee credits toward the work if you go ahead.</p>
         </div>
         <div class="plan feature">
           <span class="tag">Most popular</span>
@@ -287,7 +329,7 @@
           <p>A purpose-built Raspberry Pi bolted on to give an underpowered machine real function. You own the part.</p>
         </div>
       </div>
-      <p class="fineprint"><strong>Service area:</strong> close by, we come to you for just the round-trip gas; farther out, we'll arrange the trip and travel is on you. Either way, we'll usually suggest adding a Pi — or a few — to build real power into your machine. You front any hardware cost directly — we never float money on your parts. <strong>Optional power watchdog:</strong> a small unit that watches the power line and triggers a clean save-and-shutdown during an outage, so a blip can't corrupt your setup. It's a watchdog, not a battery — if you need the machine to keep running through an outage, that's a separate UPS.</p>
+      <p class="fineprint"><strong>Service area:</strong> the home visit is a flat trip fee covering travel and our time; farther out, we arrange the trip and travel is covered by you. Either way, we'll usually suggest adding a Pi — or a few — to build real power into your machine. You front any hardware cost directly — we never float money on your parts. <strong>Optional power watchdog:</strong> a small unit that watches the power line and triggers a clean save-and-shutdown during an outage, so a blip can't corrupt your setup. It's a watchdog, not a battery — if you need the machine to keep running through an outage, that's a separate UPS.</p>
     </div>
   </section>
 
@@ -303,6 +345,119 @@
         <p>A purpose-built Raspberry Pi bolts onto your setup and gives it real new ability — jobs your machine simply couldn't do on its own. It's made for exactly what you want, and it's the part a big-box repair counter can't offer you.</p>
         <p class="choice">Honestly, we suggest adding a personal Pi to just about any system — it's the simplest way to give a machine real beef, whether it's tired or already decent. We'll lay out what it would do and what it costs, and you decide. Recommended across the board, but always your call. No pressure, ever.</p>
       </div>
+    </div>
+  </section>
+
+  <section id="build">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>What we can make a machine do</h2>
+        <p>The secretary is where most folks start — but it's barely the beginning. If you can describe it, there's a good chance we can build it right onto hardware you own. A taste of what's on the table:</p>
+      </div>
+      <ul class="does-grid">
+        <li class="tile"><div class="ic">&#9742;</div><h3>Answer &amp; screen calls</h3><p>Pick up, take messages, and quietly turn away spam and scams.</p></li>
+        <li class="tile"><div class="ic">&#9993;</div><h3>Run your inbox</h3><p>Sort email and texts, draft your replies, set aside anything risky.</p></li>
+        <li class="tile"><div class="ic">&#128483;</div><h3>A voice you talk to</h3><p>A real spoken assistant living on your machine — ask it things out loud, get answers back.</p></li>
+        <li class="tile"><div class="ic">&#128269;</div><h3>Deep research</h3><p>Point it at a hard question and let it dig — then hand you the answer in plain words.</p></li>
+        <li class="tile"><div class="ic">&#128241;</div><h3>Reach it anywhere</h3><p>Talk or text your AI from your phone or the web — like a cell app, your assistant in your pocket wherever you are.</p></li>
+        <li class="tile"><div class="ic">&#128375;</div><h3>Tendrils everywhere</h3><p>It doesn't stay on one box. We give your device reach — running scans and jobs out on your other machines too.</p></li>
+        <li class="tile"><div class="ic">&#129520;</div><h3>Build &amp; run agent swarms</h3><p>Not one assistant — a whole crew. We stand up OpenClaw agent clusters that work together across your machines, and keep them running.</p></li>
+        <li class="tile"><div class="ic">&#128247;</div><h3>Watch your home</h3><p>Keep an eye on cameras, notice what's changed, and flag what matters — all on your own hardware.</p></li>
+        <li class="tile"><div class="ic">&#128225;</div><h3>Guard your network</h3><p>Scan every device on your WiFi, name it, and warn you when a stranger shows up.</p></li>
+        <li class="tile"><div class="ic">&#9881;</div><h3>Automate the boring stuff</h3><p>Repetitive chores on your computer, done for you on a schedule — no more clicking the same buttons.</p></li>
+        <li class="tile"><div class="ic">&#128202;</div><h3>Build real data apps</h3><p>Dashboards, pipelines, and tools — even enterprise-grade builds in platforms like Palantir Foundry.</p></li>
+        <li class="tile"><div class="ic">&#129302;</div><h3>Custom gadgets</h3><p>Wearables, desk robots, badges, smart devices — little machines built to do exactly your thing.</p></li>
+        <li class="tile"><div class="ic">&#127916;</div><h3>Make &amp; publish content</h3><p>Pictures, write-ups, even a whole automated podcast that runs itself.</p></li>
+        <li class="tile"><div class="ic">&#128200;</div><h3>Charts &amp; graphs</h3><p>Turn your numbers into clean charts and graphs you can actually read — built from your own data.</p></li>
+        <li class="tile"><div class="ic">&#128295;</div><h3>Code &amp; develop anywhere</h3><p>Real development — in Arduino for gadgets and hardware, and across the other platforms where software gets built.</p></li>
+        <li class="tile"><div class="ic">&#128421;</div><h3>Give old hardware new life</h3><p>That dusty tower or laptop turned into something that actually earns its spot on the desk.</p></li>
+        <li class="tile"><div class="ic">&#10024;</div><h3>Or something nobody's built yet</h3><p>Got an idea no store sells? That's our favorite kind. Tell us and we'll figure out how.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="alt" id="selector">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Build selector</span>
+        <h2>So — what could <em>your</em> machine become?</h2>
+        <p>Tell us what you've got. We'll show you, right now, what that exact machine can be turned into — and whether a little add-on would set it loose. No sign-up, no catch.</p>
+      </div>
+      <div class="selector">
+        <div class="q" data-q="machine">
+          <div class="label">What are we working with?</div>
+          <div class="chips" role="group" aria-label="Machine type">
+            <button type="button" class="chip" data-v="tower">Old desktop tower</button>
+            <button type="button" class="chip" data-v="laptop">A laptop</button>
+            <button type="button" class="chip" data-v="pi">Mini PC / Raspberry Pi</button>
+            <button type="button" class="chip" data-v="newer">Newer / gaming PC</button>
+            <button type="button" class="chip" data-v="unsure">Honestly, no idea</button>
+          </div>
+        </div>
+        <div class="q" data-q="ram">
+          <div class="label">How much memory (RAM), if you know?</div>
+          <div class="chips" role="group" aria-label="Memory">
+            <button type="button" class="chip" data-v="lo">Under 8&nbsp;GB / old</button>
+            <button type="button" class="chip" data-v="mid">8–16&nbsp;GB</button>
+            <button type="button" class="chip" data-v="hi">16&nbsp;GB or more</button>
+            <button type="button" class="chip" data-v="unsure">Not sure</button>
+          </div>
+        </div>
+        <div class="q" data-q="gpu">
+          <div class="label">Does it have a graphics card?</div>
+          <div class="chips" role="group" aria-label="Graphics">
+            <button type="button" class="chip" data-v="yes">Yes, a gaming/graphics card</button>
+            <button type="button" class="chip" data-v="no">No / don't think so</button>
+            <button type="button" class="chip" data-v="unsure">Not sure</button>
+          </div>
+        </div>
+
+        <div class="result" id="sel-result" hidden aria-live="polite">
+          <div class="tier" id="sel-tier"></div>
+          <h3 id="sel-title"></h3>
+          <p id="sel-desc"></p>
+          <ul class="can" id="sel-can"></ul>
+          <div class="addon" id="sel-addon"></div>
+          <div class="actions">
+            <a href="#book" class="btn">Book a checkup to make it real</a>
+          </div>
+        </div>
+      </div>
+      <p class="fineprint">However it scores here, the real answer comes at the free home-visit checkup — we read the actual hardware and tell you straight. And your assistant can run <strong>fully local</strong> (nothing leaves the house) <strong>or reach across your machines</strong> with Tailscale and Docker when you want more muscle — always your call.</p>
+    </div>
+  </section>
+
+  <section id="packages">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Packages</span>
+        <h2>Pick a lane — or we build your own.</h2>
+        <p>From one quiet secretary on your home machine, all the way up to a company flying us in to make an entire building think for itself. Same philosophy at every size: local, private, yours.</p>
+      </div>
+      <div class="price-grid">
+        <div class="plan">
+          <div class="name">Starter</div>
+          <div class="amt">from $125</div>
+          <p>Your local secretary set up on the machine you already own — calls, messages, email, texts, calendar, reminders. One-time, no subscription.</p>
+        </div>
+        <div class="plan">
+          <div class="name">Home Pro</div>
+          <div class="amt">By build</div>
+          <p>Everything in Starter, plus a voice you talk to and a personal Pi bolted on for real muscle — vision, automation, the heavier jobs.</p>
+        </div>
+        <div class="plan">
+          <div class="name">Small Business</div>
+          <div class="amt">By quote</div>
+          <p>Several machines working as one: a network guard, agent helpers, and reach across your locations with Tailscale and Docker. We come set it up on site.</p>
+        </div>
+        <div class="plan feature">
+          <span class="tag">The Big Build</span>
+          <div class="name">Whole-building, agentic</div>
+          <div class="amt">By quote <small>+ travel</small></div>
+          <p>Fly us in — nationwide. We outfit your entire building and make every machine <strong>agentic</strong>: on-prem private AI that never leaves your walls, agent swarms doing the work, and Foundry-grade data apps. A firm in New York flies us up; we leave with their whole floor running its own private intelligence. White-glove, built to your spec.</p>
+        </div>
+      </div>
+      <p class="fineprint"><strong>Available nationwide.</strong> The home visit carries a flat trip fee covering travel and our time. Farther out — a company that wants the Big Build flies us in and puts us up, and we don't leave until every machine in the place is working for them. Your data stays on your hardware the whole time; nothing goes to an outside cloud unless you ask for it.</p>
     </div>
   </section>
 
@@ -337,7 +492,60 @@
     </div>
   </section>
 
+  <section class="alt" id="listen">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">The Tuesday Report</span>
+        <h2>Where the future gets filed — and we read it first.</h2>
+        <p>Every world-changing invention starts as a patent nobody's reading yet. Each week our two hosts — Theo and Mara, one easy voice and one curious one — sit down with the patents filed that week and turn them into a real conversation: what was dreamed up, who dreamed it, and what they've built before. The kind of show Einstein would've grinned at. If you love the way Neil deGrasse Tyson makes the universe feel close, this is that — pointed at the week the future actually got written down.</p>
+      </div>
+      <div class="proof-grid">
+        <div class="proofcard"><div class="play">&#9654;</div><h3>Two hosts, real talk</h3><p>Theo and Mara trade the week's reveals back and forth like friends at a diner — big ideas, zero jargon, honest wonder.</p></div>
+        <div class="proofcard"><div class="play">&#9787;</div><h3>Who's building your future</h3><p>Every filing has a name behind it. We tell you who they are and what they've shipped before — so the future has a face.</p></div>
+        <div class="proofcard"><div class="play">&#9873;</div><h3>Patreon extra</h3><p>Patrons get the layman's schematics printed out, with a short plain-words summary of everything — emailed straight to them.</p></div>
+      </div>
+      <div class="actions" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:34px;align-items:center;">
+        <!-- When the show is live, drop the Spotify/Apple URLs into the two links below and delete this comment. -->
+        <a href="#book" class="btn">Launching soon — notify me</a>
+        <a href="#" class="btn ghost" aria-disabled="true">Listen on Spotify</a>
+        <a href="#" class="btn ghost" aria-disabled="true">Apple Podcasts</a>
+      </div>
+    </div>
+  </section>
+
   <section class="cta-band" id="book">
+    <svg class="skyline" viewBox="0 0 1200 170" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+      <g class="bldg">
+        <rect x="0" y="70" width="140" height="100"/>
+        <rect x="150" y="40" width="90" height="130"/>
+        <rect x="250" y="95" width="120" height="75"/>
+        <rect x="380" y="55" width="80" height="115"/>
+        <rect x="470" y="20" width="70" height="150"/>
+        <rect x="555" y="80" width="150" height="90"/>
+        <rect x="715" y="50" width="95" height="120"/>
+        <rect x="820" y="100" width="130" height="70"/>
+        <rect x="960" y="35" width="85" height="135"/>
+        <rect x="1055" y="75" width="145" height="95"/>
+      </g>
+      <g class="win">
+        <rect x="162" y="55" width="8" height="11"/><rect x="177" y="55" width="8" height="11"/><rect x="192" y="55" width="8" height="11"/><rect x="207" y="55" width="8" height="11"/>
+        <rect x="162" y="80" width="8" height="11"/><rect x="177" y="80" width="8" height="11"/><rect x="207" y="80" width="8" height="11"/>
+        <rect x="162" y="105" width="8" height="11"/><rect x="192" y="105" width="8" height="11"/><rect x="207" y="105" width="8" height="11"/>
+        <rect x="480" y="38" width="8" height="11"/><rect x="495" y="38" width="8" height="11"/><rect x="510" y="38" width="8" height="11"/>
+        <rect x="480" y="62" width="8" height="11"/><rect x="510" y="62" width="8" height="11"/>
+        <rect x="480" y="88" width="8" height="11"/><rect x="495" y="88" width="8" height="11"/>
+        <rect x="480" y="112" width="8" height="11"/><rect x="510" y="112" width="8" height="11"/>
+        <rect x="725" y="66" width="8" height="11"/><rect x="742" y="66" width="8" height="11"/><rect x="759" y="66" width="8" height="11"/><rect x="776" y="66" width="8" height="11"/>
+        <rect x="725" y="90" width="8" height="11"/><rect x="759" y="90" width="8" height="11"/><rect x="776" y="90" width="8" height="11"/>
+        <rect x="970" y="52" width="8" height="11"/><rect x="987" y="52" width="8" height="11"/><rect x="1004" y="52" width="8" height="11"/><rect x="1021" y="52" width="8" height="11"/>
+        <rect x="970" y="78" width="8" height="11"/><rect x="1004" y="78" width="8" height="11"/><rect x="1021" y="78" width="8" height="11"/>
+        <rect x="987" y="104" width="8" height="11"/><rect x="1021" y="104" width="8" height="11"/>
+        <rect x="568" y="95" width="8" height="11"/><rect x="588" y="95" width="8" height="11"/><rect x="608" y="95" width="8" height="11"/><rect x="628" y="95" width="8" height="11"/><rect x="648" y="95" width="8" height="11"/><rect x="668" y="95" width="8" height="11"/>
+        <rect x="568" y="120" width="8" height="11"/><rect x="608" y="120" width="8" height="11"/><rect x="648" y="120" width="8" height="11"/><rect x="688" y="120" width="8" height="11"/>
+        <rect x="1068" y="92" width="8" height="11"/><rect x="1088" y="92" width="8" height="11"/><rect x="1108" y="92" width="8" height="11"/><rect x="1128" y="92" width="8" height="11"/>
+        <rect x="1068" y="118" width="8" height="11"/><rect x="1108" y="118" width="8" height="11"/><rect x="1148" y="118" width="8" height="11"/>
+      </g>
+    </svg>
     <div class="wrap">
       <h2>Start with a home-visit checkup</h2>
       <p>Tell us about the machine collecting dust. We'll tell you honestly what it can become.</p>
@@ -401,6 +609,84 @@
         }
       });
     }
+  })();
+
+  // ---- Build selector ----
+  (function () {
+    var sel = { machine: null, ram: null, gpu: null };
+    var groups = document.querySelectorAll('#selector .q');
+    if (!groups.length) return;
+
+    function render() {
+      if (!sel.machine || !sel.ram || !sel.gpu) return;
+
+      var score = 0;
+      score += ({ hi: 2, mid: 1, lo: 0, unsure: 1 })[sel.ram];
+      score += ({ yes: 2, no: 0, unsure: 0 })[sel.gpu];
+      if (sel.machine === 'newer') score += 1;
+      if (sel.machine === 'pi') score = Math.min(score, 1);
+
+      var r;
+      if (score >= 4) {
+        r = {
+          tier: 'Full powerhouse',
+          title: 'This machine can run the whole thing — in your house.',
+          desc: 'You\'ve got real horsepower. Everything can live locally: a voice you talk to, eyes that see and react, even a whole crew of agents working together. Nothing has to leave home.',
+          can: ['A spoken assistant you talk to out loud, running on-device',
+                'See-and-react: cameras, home watch, vision',
+                'Build and run an OpenClaw agent swarm across your machines',
+                'Deep research, charts, data apps — even Palantir Foundry builds'],
+          addon: 'You don\'t <em>need</em> an add-on — but a <strong>personal Pi</strong> still earns its keep as a dedicated watchdog or a second pair of hands. Your call, no pressure.'
+        };
+      } else if (score >= 2) {
+        r = {
+          tier: 'Capable — with room to grow',
+          title: 'A solid local secretary today, and more when you want it.',
+          desc: 'This machine handles the everyday beautifully on its own — calls, messages, email, reminders, automation — all local. For the heavier jobs, we add a little muscle.',
+          can: ['Your local secretary: calls, messages, email, texts, calendar',
+                'A voice to talk to and automation of the boring stuff',
+                'Reach it from your phone or the web, like a cell app',
+                'Add vision and agents by bolting on a Pi, or reaching out with Tailscale'],
+          addon: 'We\'d suggest a <strong>personal Pi add-on</strong> for the heavy lifting — vision, agents, anything that needs more grunt — so the main machine stays light and fast.'
+        };
+      } else {
+        r = {
+          tier: 'The revival build',
+          title: 'We bring it back to life — and give it tendrils.',
+          desc: 'Older or lighter, but far from useless. We turn it into a genuine local secretary, and where it runs short of power, it borrows it: a Pi for muscle, and Tailscale so it can reach across your other machines instead of going it alone.',
+          can: ['A real local secretary: answers calls, takes messages, handles email',
+                'Reminders and a calendar that actually nudge you',
+                'Tendrils: reach out to your other machines for the big jobs',
+                'A Pi add-on that gives the old box power it never had'],
+          addon: 'This is where a <strong>personal Pi</strong> matters most — it\'s the simplest way to give a tired machine real new ability. We\'ll lay out exactly what it\'d do and cost, and you decide.'
+        };
+      }
+      if (sel.machine === 'unsure' || sel.ram === 'unsure') {
+        r.desc += ' (You weren\'t sure on the specs — that\'s fine. The free checkup pins it down exactly.)';
+      }
+
+      document.getElementById('sel-tier').textContent = r.tier;
+      document.getElementById('sel-title').textContent = r.title;
+      document.getElementById('sel-desc').innerHTML = r.desc;
+      var ul = document.getElementById('sel-can');
+      ul.innerHTML = '';
+      r.can.forEach(function (c) { var li = document.createElement('li'); li.textContent = c; ul.appendChild(li); });
+      document.getElementById('sel-addon').innerHTML = r.addon;
+      var box = document.getElementById('sel-result');
+      box.hidden = false;
+    }
+
+    groups.forEach(function (g) {
+      var key = g.getAttribute('data-q');
+      g.querySelectorAll('.chip').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          g.querySelectorAll('.chip').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+          btn.setAttribute('aria-pressed', 'true');
+          sel[key] = btn.getAttribute('data-v');
+          render();
+        });
+      });
+    });
   })();
 </script>
 </body>
