@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Marshin Burner — flash a tool onto your ESP32, right in your browser</title>
+<meta name="description" content="Plug in your ESP32, pick a tool, and flash it straight from your browser. Nothing uploads, nothing leaves your machine. A private maker's flasher by MarshinTechnologies.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<!-- ESP Web Tools: browser-side flashing over Web Serial (Chrome/Edge desktop) -->
+<script type="module" src="https://unpkg.com/esp-web-tools@10.0.0/dist/web/install-button.js?module"></script>
+<style>
+  :root {
+    color-scheme: dark;
+    --bg: #0c0f14; --bg-2: #11161e; --panel: #151c26; --line: #26303d;
+    --ink: #e8edf4; --ink-soft: #9fb0c3; --ink-faint: #6b7c90;
+    --accent: #38e08a; --accent-2: #2bd4e0; --warn: #e0a84f; --danger: #e05a5a;
+    --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.45);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background:
+      radial-gradient(1200px 500px at 80% -10%, rgba(43,212,224,.08), transparent 60%),
+      radial-gradient(900px 500px at 0% 0%, rgba(56,224,138,.08), transparent 55%),
+      var(--bg);
+    color: var(--ink);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 16px; line-height: 1.6; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent-2); }
+  h1, h2, h3 { font-family: Fraunces, Georgia, serif; line-height: 1.08; letter-spacing: -.01em; font-weight: 600; text-wrap: balance; }
+  .wrap { width: 100%; max-width: 1040px; margin-inline: auto; padding-left: max(20px, env(safe-area-inset-left,0)); padding-right: max(20px, env(safe-area-inset-right,0)); }
+
+  header.bar { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+  .bar .wrap { display: flex; align-items: center; justify-content: space-between; padding-block: 13px; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: Fraunces, serif; font-weight: 600; }
+  .mark { width: 24px; height: 24px; border-radius: 7px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); position: relative; flex: none; }
+  .mark::after { content: ""; position: absolute; inset: 6px; border: 2px solid var(--bg); border-radius: 50%; border-right-color: transparent; }
+  .bar a.back { font-size: .9rem; color: var(--ink-soft); text-decoration: none; }
+  .bar a.back:hover { color: var(--ink); }
+
+  .hero .wrap { padding-block: clamp(44px, 8vw, 88px); }
+  .eyebrow { font-family: var(--mono); font-size: .78rem; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+  .hero h1 { font-size: clamp(2.3rem, 6vw, 3.8rem); margin: 16px 0 0; }
+  .hero h1 .grad { background: linear-gradient(100deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p.lede { font-size: clamp(1.05rem, 2.2vw, 1.3rem); color: var(--ink-soft); margin-top: 20px; max-width: 60ch; }
+  .reassure { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 24px; font-size: .9rem; color: var(--ink-soft); }
+  .reassure span { display: inline-flex; align-items: center; gap: 8px; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex: none; box-shadow: 0 0 10px var(--accent); }
+
+  .note { border: 1px solid var(--line); background: var(--panel); border-radius: 14px; padding: 14px 16px; margin-top: 26px; font-size: .92rem; color: var(--ink-soft); }
+  .note strong { color: var(--ink); }
+  #browser-warn { display: none; border-color: color-mix(in srgb, var(--warn) 55%, var(--line)); background: color-mix(in srgb, var(--warn) 10%, var(--panel)); color: var(--ink); }
+  #browser-warn.show { display: block; }
+
+  section { padding-block: clamp(30px, 5vw, 54px); }
+  .section-head h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); }
+  .section-head p { color: var(--ink-soft); margin-top: 8px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; margin-top: 28px; }
+  .fw { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 22px; display: flex; flex-direction: column; gap: 10px; box-shadow: var(--shadow); min-width: 0; }
+  .fw .chip-tag { font-family: var(--mono); font-size: .72rem; letter-spacing: .08em; color: var(--accent-2); border: 1px solid color-mix(in srgb, var(--accent-2) 40%, var(--line)); border-radius: 999px; padding: 3px 9px; align-self: flex-start; }
+  .fw h3 { font-size: 1.2rem; margin: 2px 0 0; }
+  .fw p { font-size: .93rem; color: var(--ink-soft); margin: 0; flex: 1; }
+  .fw .row { margin-top: 8px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .fw .soon { font-family: var(--mono); font-size: .75rem; color: var(--ink-faint); border: 1px dashed var(--line); border-radius: 8px; padding: 8px 12px; }
+
+  /* ESP Web Tools button theming */
+  esp-web-install-button { --esp-tools-button-color: #04120a; --esp-tools-button-background-color: var(--accent); }
+  esp-web-install-button[install-unsupported] { display: none; }
+
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; margin-top: 24px; }
+  .step { min-width: 0; }
+  .step .n { font-family: var(--mono); color: var(--accent); font-size: 1.1rem; }
+  .step h3 { font-size: 1.05rem; margin: 8px 0 4px; }
+  .step p { color: var(--ink-soft); font-size: .92rem; margin: 0; }
+
+  footer { border-top: 1px solid var(--line); margin-top: 20px; }
+  footer .wrap { padding-block: 32px; color: var(--ink-faint); font-size: .85rem; display: flex; flex-wrap: wrap; gap: 14px 30px; justify-content: space-between; }
+  footer a { color: var(--ink-soft); }
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brand"><span class="mark" aria-hidden="true"></span> Marshin Burner</div>
+    <a class="back" href="./index.html">← MarshinTechnologies</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">// browser-side flasher</div>
+      <h1>Plug in. Pick a tool. <span class="grad">Flash it.</span></h1>
+      <p class="lede">Connect your ESP32 to this computer, choose a tool below, and your browser writes it straight to the chip over USB. No app to install, no account — and <strong>nothing ever uploads.</strong> The flash happens right here, between your browser and your board.</p>
+      <div class="reassure">
+        <span><i class="dot"></i> Runs in your browser</span>
+        <span><i class="dot"></i> Nothing leaves your machine</span>
+        <span><i class="dot"></i> No account, no install</span>
+      </div>
+      <div class="note" id="browser-warn">
+        <strong>Heads up:</strong> browser flashing needs <strong>Chrome or Edge on a desktop</strong> (it uses the Web Serial API, which Firefox, Safari, and phones don't have yet). Open this page in Chrome or Edge and the Flash buttons will light up.
+      </div>
+      <div class="note">
+        <strong>First time?</strong> Put your board in flash/boot mode if it needs it (hold BOOT/G0 while tapping RESET), plug it into USB, then hit Flash and pick the serial port. We can't brick what we back up — bring your firmware questions to <a href="./index.html#book">a Marshin checkup</a>.
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <h2>The tool rack</h2>
+        <p>Small, honest, useful firmwares — more added over time. Each one tells you which chip it's for.</p>
+      </div>
+      <div class="grid">
+
+        <div class="fw">
+          <span class="chip-tag">ESP32-S3</span>
+          <h3>WiFi Scanner</h3>
+          <p>Turns a bare board into a pocket WiFi scanner — lists the networks around you, their channel and signal, over USB serial. The maker's "is it alive?" first flash. Flash it, then open the console to watch the networks roll in.</p>
+          <div class="row">
+            <esp-web-install-button manifest="./firmware/wifi-scanner/manifest.json"></esp-web-install-button>
+          </div>
+        </div>
+
+        <div class="fw">
+          <span class="chip-tag">ESP32 · S3</span>
+          <h3>Blink &amp; Hello</h3>
+          <p>The classic proof-of-life: blinks the LED and prints a Marshin hello on serial. Flash it to confirm a board and your cable work before anything fancy.</p>
+          <div class="row">
+            <span class="soon">firmware wiring in progress — live soon</span>
+          </div>
+        </div>
+
+        <div class="fw">
+          <span class="chip-tag">your pick</span>
+          <h3>Your build, here</h3>
+          <p>Got a firmware you love? We can add it to this rack as a one-click flash — yours, or one we build to spec. That's the "unique flasher" part.</p>
+          <div class="row">
+            <a href="./index.html#book" class="chip-tag" style="text-decoration:none">Ask us →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head"><h2>How it works</h2></div>
+      <div class="steps">
+        <div class="step"><div class="n">01</div><h3>Plug in</h3><p>Connect your ESP32 to this computer with a data USB cable (not a charge-only one).</p></div>
+        <div class="step"><div class="n">02</div><h3>Pick &amp; Flash</h3><p>Choose a tool, click Flash, and pick your board's serial port when the browser asks.</p></div>
+        <div class="step"><div class="n">03</div><h3>Done</h3><p>It writes and verifies in under a minute. Your board reboots into the new tool. That's it.</p></div>
+      </div>
+      <div class="note" style="margin-top:28px">
+        <strong>Why in the browser?</strong> Because it's yours. The firmware goes from this page straight to your chip — Marshin never sees your device, your data, or what you flash. Same principle as everything we build: <strong>local, private, yours.</strong>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>&copy; <span id="yr"></span> MarshinTechnologies · The Marshin Burner</div>
+    <div><a href="./index.html">Home</a> · <a href="./index.html#book">Book a checkup</a> · Local. Private. Yours.</div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var y = document.getElementById('yr'); if (y) y.textContent = new Date().getFullYear();
+    // Show the Chrome/Edge notice only when Web Serial isn't available.
+    if (!('serial' in navigator)) {
+      var w = document.getElementById('browser-warn'); if (w) w.classList.add('show');
+    }
+  })();
+</script>
+</body>
+</html>

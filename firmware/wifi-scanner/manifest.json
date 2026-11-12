@@ -1,0 +1,13 @@
+{
+  "name": "Marshin WiFi Scanner",
+  "version": "1.0",
+  "new_install_prompt_erase": false,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        { "path": "wifi-scanner-esp32s3.bin", "offset": 0 }
+      ]
+    }
+  ]
+}
